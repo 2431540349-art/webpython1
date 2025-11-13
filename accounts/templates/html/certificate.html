@@ -1,0 +1,57 @@
+{% extends 'html/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Chứng chỉ - {{ course.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/certificate.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="certificate-page">
+  <div class="certificate" role="document" aria-label="Chứng chỉ hoàn thành">
+    <div class="cert-header">
+      <div class="cert-logo">
+        {% comment %} Replace with your logo image if available: {% static 'accounts/images/logo.png' %} {% endcomment %}
+        <img src="{% static 'accounts/images/logo.png' %}" alt="Logo" style="max-width:100%; max-height:100%; display:block" onerror="this.style.display='none'">
+      </div>
+      <div class="cert-title">
+        <h1>Chứng chỉ hoàn thành</h1>
+        <p>Chứng nhận đã hoàn thành khóa học</p>
+      </div>
+      <div style="width:88px"></div>
+    </div>
+
+    <div class="cert-body">
+      <div class="recipient-label">Được trao cho</div>
+      <div class="recipient-name">{{ user.get_full_name|default:user.username }}</div>
+      <div class="course-title">Đã hoàn thành: <strong>{{ course.title }}</strong></div>
+
+      <div class="meta-row">
+        <div>Ngày hoàn thành: <strong>{{ completed_at|date:"d/m/Y H:i" }}</strong></div>
+        <div>Khóa học ID: <strong>{{ course.id }}</strong></div>
+      </div>
+
+      <div class="signature-area">
+        <div class="signature-block">
+          <div class="signature-line">Người phụ trách<br><span style="font-weight:700">(Chữ ký & tên)</span></div>
+        </div>
+
+        <div class="qr-block">
+          <div class="qr-placeholder" title="QR code kiểm tra xác thực"></div>
+        </div>
+
+        <div class="signature-block">
+          <div class="signature-line">Ngày cấp<br><span style="font-weight:700">{{ completed_at|date:"d/m/Y" }}</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px" class="no-print">
+        <a href="?print=1" onclick="window.print();return false;" class="btn btn-primary">In chứng chỉ</a>
+        <a href="{% url 'accounts:skills' %}" class="btn btn-secondary">Quay lại</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

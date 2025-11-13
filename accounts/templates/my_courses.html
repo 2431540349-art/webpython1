@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Khóa học của tôi</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/user_dashboard.css' %}">
+    <script src="{% static 'accounts/js/navigation.js' %}" defer></script>
+</head>
+<body>
+    <header class="top-nav">
+    <button class="menu-toggle">☰</button>
+
+        <nav class="nav-links">
+            <a href="{% url 'accounts:my_courses' %}" class="active">Khóa học của tôi</a>
+            <a href="{% url 'accounts:user_dashboard' %}">Tất cả khóa học</a>
+            <a href="{% url 'accounts:skills' %}">Kỹ năng</a>
+            <a href="{% url 'accounts:progress_overview' %}">Tiến độ</a>
+            <a href="{% url 'accounts:mock_exams_list' %}">Thi thử</a>
+            <a href="{% url 'accounts:scores_page' %}">Điểm số</a>
+        </nav>
+
+    <div class="profile">
+            <img src="{% if user.userprofile.avatar %}{{ user.userprofile.avatar.url }}{% else %}https://i.pravatar.cc/40{% endif %}" alt="avatar" class="avatar">
+            <span>{{ request.user.username }}</span>
+            <div class="dropdown" id="profileDropdown">
+                <a href="{% url 'accounts:profile' %}">Hồ sơ</a>
+                <a href="{% url 'accounts:logout' %}">Đăng xuất</a>
+            </div>
+        </div>
+    </header>
+
+    <aside id="sidebar" class="sidebar">
+        <a href="#">Trang chủ</a>
+    </aside>
+
+    <main class="content">
+        <h1>Khóa học của tôi</h1>
+        <div class="courses-grid">
+            {% for course in enrolled_courses %}
+            <div class="course-card enrolled">
+                {% if course.image %}
+                    <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image">
+                {% else %}
+                    <div class="no-image">No image available</div>
+                {% endif %}
+                <div class="course-info">
+                    <h2>{{ course.title }}</h2>
+                    <p class="course-description">{{ course.description }}</p>
+                    <div class="course-meta">
+                        <span class="enrolled-badge">✓ Đã đăng ký</span>
+                    </div>
+                    <div class="course-actions">
+                        <!-- Prominent primary action -->
+                        <a href="{% url 'accounts:course_detail' course.id %}" class="btn btn-primary btn-learn">Vào học ngay</a>
+                        <!-- Optional smaller action (view details) -->
+                        <a href="{% url 'accounts:course_detail' course.id %}" class="btn btn-secondary" aria-label="Xem chi tiết {{ course.title }}">Chi tiết</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-courses">
+                <p>Bạn chưa đăng ký khóa học nào.</p>
+                <a href="{% url 'accounts:user_dashboard' %}" class="btn btn-primary">Xem tất cả khóa học</a>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- navigation.js provides toggleSidebar and toggleProfileDropdown globally -->
+</body>
+</html>

@@ -1,0 +1,164 @@
+/* High-quality printable certificate styles
+   Designed for A4 landscape print and good on-screen preview.
+   Place this file at: accounts/static/accounts/css/certificate.css
+*/
+
+:root{
+  --paper-width: 297mm; /* A4 landscape width */
+  --paper-height: 210mm; /* A4 landscape height */
+  --accent: #c79a2a; /* gold */
+  --text: #222;
+  --muted: #6b7280;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Times New Roman", Georgia, serif;
+  color: var(--text);
+  background: #f3f4f6; /* subtle page background on screen */
+}
+
+.certificate-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 36px;
+}
+
+.certificate {
+  width: calc(var(--paper-width) - 72px);
+  height: calc(var(--paper-height) - 72px);
+  background: white;
+  box-shadow: 0 18px 40px rgba(16,24,40,0.08);
+  border-radius: 6px;
+  padding: 36px 48px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border: 8px solid rgba(199,154,42,0.12);
+}
+
+/* decorative inner frame */
+.certificate::before{
+  content: "";
+  position: absolute;
+  inset: 28px;
+  border: 2px solid rgba(199,154,42,0.18);
+  pointer-events: none;
+}
+
+.cert-header{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.cert-logo{
+  width:88px;
+  height:88px;
+  border-radius:10px;
+  background: linear-gradient(135deg,#fff 0%, #f9fafb 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:var(--accent);
+  font-size:20px;
+  border: 2px solid rgba(0,0,0,0.04);
+}
+.cert-title{
+  flex:1;
+  text-align:center;
+}
+.cert-title h1{
+  margin:0;
+  font-size:28px;
+  letter-spacing:2px;
+  color:var(--accent);
+  font-weight:800;
+}
+.cert-title p{
+  margin:6px 0 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.cert-body{
+  margin-top:28px;
+  text-align:center;
+}
+.recipient-label{
+  font-size:14px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+}
+.recipient-name{
+  margin-top:10px;
+  font-size:44px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+.course-title{
+  margin-top:12px;
+  font-size:20px;
+  font-weight:600;
+  color:#111827;
+}
+.meta-row{
+  margin-top:28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.signature-area{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-top:36px;
+}
+.signature-block{
+  width:220px;
+  text-align:center;
+}
+.signature-line{
+  border-top:1px solid rgba(0,0,0,0.18);
+  margin-top:14px;
+  padding-top:8px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.qr-block{
+  width:84px;
+  text-align:center;
+}
+.qr-placeholder{
+  width:84px;
+  height:84px;
+  background:#f9fafb;
+  border:1px solid rgba(0,0,0,0.04);
+  display:inline-block;
+}
+
+/* Screen-only controls to hide when printing */
+.no-print{ display:inline-block; }
+
+@media print{
+  html, body { background: white; }
+  .certificate { box-shadow:none; border-radius: 0; margin:0; width:100%; height:100%; padding:18mm; border: none }
+  .certificate::before { border: none }
+  .no-print{ display:none !important }
+  @page { size: A4 landscape; margin: 12mm }
+}
+
+/* Small screens fallback */
+@media (max-width:900px){
+  .certificate { width:100%; height:auto }
+  .recipient-name { font-size:32px }
+}

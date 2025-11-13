@@ -1,0 +1,50 @@
+{% extends 'html/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Tiến độ học tập{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/progress.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'accounts/js/progress.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<section class="progress-page">
+  <div class="progress-container">
+    <div class="progress-header">
+      <h1>Tiến độ học tập của bạn</h1>
+      <p>Xem tiến độ hoàn thành từng khóa học bạn đã đăng ký. Nhấp vào một khóa để vào trang chi tiết.</p>
+    </div>
+
+    {% if user_progress %}
+      <div class="progress-grid">
+        {% for p in user_progress %}
+          <a href="{{ p.url }}" class="progress-card">
+            <div class="progress-ring" data-percent="{{ p.percent }}">
+              <div class="progress-ring-fill"></div>
+              <div class="progress-ring-center">{{ p.percent }}%</div>
+            </div>
+            <div class="progress-info">
+              <div class="progress-info-header">
+                <h3 class="progress-title">{{ p.title }}</h3>
+                <div class="progress-meta">{{ p.completed }}/{{ p.total }} hoàn thành</div>
+              </div>
+
+              <div style="margin-top:12px;">
+                <!-- Segmented bar (battery-like). JS will populate segments and animate them. -->
+                <div class="segmented-bar small" data-percent="{{ p.percent }}" data-steps="10" aria-hidden="false"></div>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="padding:24px;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.04);">Bạn chưa đăng ký khóa học nào.</div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

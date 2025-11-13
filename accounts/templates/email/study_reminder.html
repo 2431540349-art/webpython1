@@ -1,0 +1,21 @@
+<html>
+  <body>
+    <p>Chào {{ user.get_full_name|default:user.username }},</p>
+    <p>Đây là email nhắc học tự động. Dưới đây là các khóa bạn đang theo học và tiến độ hiện tại:</p>
+    <ul>
+      {% for p in pending %}
+        <li>
+          <strong>{{ p.course.title }}</strong> — Tiến độ: {{ p.progress }}%
+          {% if p.next_lesson %}
+            <div>Tiếp tục học: <a href="{{ p.course_url }}">Mở khóa học</a></div>
+            <div>Bài tiếp theo: {{ p.next_lesson.title }}</div>
+          {% else %}
+            <div>Không có bài tiếp theo (có thể bạn đã hoàn thành).</div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <p>Chúc bạn học tốt!</p>
+    <p><small>Nếu bạn không muốn nhận email nhắc học, hãy chỉnh sửa cài đặt thông báo trong hồ sơ của bạn.</small></p>
+  </body>
+</html>

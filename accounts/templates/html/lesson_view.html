@@ -1,0 +1,155 @@
+{% extends 'html/dashboard_base.html' %}
+{% load custom_filters %}
+
+{% block title %}{{ lesson.title }} - {{ course.title }}{% endblock %}
+
+{% block sidebar %}
+    <a href="{% url 'accounts:course_detail' course.id %}" class="sidebar-course-title" style="display: block; padding: 20px; font-size: 1.2rem; font-weight: 600; color: #1a1a1a; text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.1);">{{ course.title }}</a>
+    <div class="lesson-list" style="padding: 12px;">
+        {% for lesson in course.lessons.all %}
+            <a href="{% url 'accounts:lesson_detail' course.id lesson.id %}" 
+               class="lesson-item {% if lesson.id == current_lesson.id %}active{% endif %}"
+               style="display: flex; align-items: center; justify-content: space-between; margin: 8px 0; padding: 12px 16px; border-radius: 12px; text-decoration: none; transition: all 0.3s ease;
+                      {% if lesson.id == current_lesson.id %}
+                          background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+                          color: white;
+                          box-shadow: 0 4px 15px rgba(255,107,107,0.2);
+                      {% elif lesson.id in lesson_progress and lesson_progress|get_item:lesson.id|get_item:'completed' %}
+                          background: linear-gradient(135deg, #28a745, #34ce57);
+                          color: white;
+                          box-shadow: 0 4px 15px rgba(40,167,69,0.2);
+                      {% else %}
+                          background: white;
+                          color: #1a1a1a;
+                          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                      {% endif %}">
+                <span style="flex: 1;">{{ lesson.title }}</span>
+                {% if lesson.id in lesson_progress %}
+                    {% if lesson_progress|get_item:lesson.id|get_item:'completed' %}
+                        <span class="badge completed" style="
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 24px;
+                            height: 24px;
+                            background: rgba(255,255,255,0.9);
+                            color: #28a745;
+                            border-radius: 50%;
+                            font-size: 0.9rem;
+                            margin-left: 8px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            ✓
+                        </span>
+                    {% endif %}
+                {% endif %}
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="lesson-container" style="display: flex; flex-direction: column; align-items: center;">
+        <div class="lesson-header" style="width: 100%; max-width: 600px; text-align: center; margin-bottom: 24px;">
+            <h1 style="font-size: 2rem; font-weight: 700; color: #b3001b;">{{ lesson.title }}</h1>
+            {% if lesson.id in lesson_progress and lesson_progress|get_item:lesson.id|get_item:'completed' %}
+                <div class="lesson-status completed" style="margin-top: 8px;">
+                    <span class="badge" style="background: #28a745; color: #fff; padding: 4px 12px; border-radius: 12px;">✓ Đã hoàn thành</span>
+                    <span class="score" style="margin-left: 12px; color: #007bff; font-weight: 600;">Điểm: {{ lesson_progress|get_item:lesson.id|get_item:'score' }}%</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card mb-4" style="width: 100%; max-width: 600px; box-shadow: 0 4px 18px rgba(0,0,0,0.10); border-radius: 16px; margin-bottom: 32px;">
+            <div class="card-body" style="padding: 24px;">
+                <h2 class="card-title" style="font-size: 1.3rem; color: #b3001b; margin-bottom: 12px;">{{ lesson.title }}</h2>
+                {% if lesson.video %}
+                    <div class="lesson-video mb-3" style="margin-bottom: 18px;">
+                        <video controls style="width: 100%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);" preload="metadata">
+                            <source src="{{ lesson.video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                {% endif %}
+                <div class="lesson-content" style="color: #444; font-size: 1rem;">{{ lesson.description|safe }}</div>
+            </div>
+        </div>
+
+        {% if not progress.completed %}
+        <form id="quiz-form" method="POST" action="{% url 'accounts:submit_lesson' lesson.id %}" style="width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; gap: 24px;">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="card mb-3" style="width: 100%; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-radius: 14px; transition: box-shadow 0.2s;">
+                    <div class="card-body" style="padding: 20px; display: flex; flex-direction: column; align-items: center;">
+                        <h5 class="card-title" style="text-align: center; font-size: 1.1rem; font-weight: 600; color: #b3001b; margin-bottom: 10px;">Câu {{ forloop.counter }}: {{ question.question_text }}</h5>
+                        {% if question.image %}
+                            <img src="{{ question.image.url }}" alt="Question image" class="img-fluid mb-3" style="max-width: 220px; border-radius: 8px; margin-bottom: 12px;">
+                        {% endif %}
+                        <div style="width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px;">
+                        {% for choice in choices|get_item:question.id %}
+                            <div class="form-check" style="flex: 0 1 calc(50% - 5px); display: flex; align-items: center; justify-content: flex-start; background: #f7f7fa; border-radius: 8px; padding: 8px 12px; transition: background 0.2s; cursor: pointer;">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       id="choice_{{ choice.id }}" 
+                                       value="{{ choice.id }}" required style="margin-right: 8px;">
+                                <label class="form-check-label" for="choice_{{ choice.id }}" style="font-size: 1rem; color: #333; cursor: pointer;">
+                                    {{ choice.choice_text }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" style="margin: 18px auto 0; padding: 12px 32px; font-size: 1.1rem; border-radius: 8px; background: linear-gradient(90deg,#b3001b,#ff2e43); border: none; color: #fff; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.10); transition: background 0.2s;">Nộp bài</button>
+        </form>
+        {% else %}
+        <div class="alert alert-success" style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h4 style="color: #28a745; font-size: 1.2rem;">Kết quả:</h4>
+            <p style="font-size: 1.1rem;">Điểm số: {{ progress.score }}%</p>
+            <p style="color: #007bff;">Hoàn thành: {{ progress.completed_at|date:"d/m/Y H:i" }}</p>
+        </div>
+        <div class="d-flex gap-2" style="justify-content: center; margin-top: 18px;">
+            <a href="{% url 'accounts:course_detail' course.id %}" class="btn btn-primary" style="padding: 10px 24px; border-radius: 8px; background: #007bff; color: #fff; font-weight: 600; margin-right: 8px;">Quay lại khóa học</a>
+            <form method="post" action="{% url 'accounts:retry_lesson' lesson.id %}" style="display: inline-block;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary" style="padding: 10px 24px; border-radius: 8px; background: #6c757d; color: #fff; font-weight: 600;">Làm lại</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('quiz-form') && document.getElementById('quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultHtml = `
+            <div class="alert alert-success">
+                <h4>Kết quả:</h4>
+                <p>Điểm số: ${data.score}%</p>
+                <p>Trả lời đúng: ${data.correct_answers}/${data.total_questions}</p>
+            </div>
+            <a href="{% url 'accounts:course_detail' course.id %}" class="btn btn-primary">Quay lại khóa học</a>
+        `;
+        form.innerHTML = resultHtml;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra khi nộp bài. Vui lòng thử lại.');
+    });
+});
+</script>
+{% endblock %}

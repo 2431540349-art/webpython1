@@ -1,0 +1,174 @@
+/* ==== Toàn bộ trang ==== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #fff0f0, #ffe5e5); /* nền đỏ nhạt – trắng */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* ==== Hiệu ứng nền AI mờ ảo ==== */
+.ai-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 320px;
+  font-weight: 900;
+  color: rgba(255, 0, 0, 0.05); /* đỏ nhạt */
+  letter-spacing: -12px;
+  text-shadow: 0 0 60px rgba(255, 0, 0, 0.1),
+               0 0 100px rgba(255, 0, 0, 0.05);
+  filter: blur(2px);
+  user-select: none;
+  pointer-events: none;
+  animation: aiMove 10s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+body::before {
+  content: "AI";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 720px;
+  font-weight: 900;
+  color: rgba(255, 0, 0, 0.08); /* đỏ nhạt */
+  letter-spacing: -12px;
+  text-shadow: 0 0 60px rgba(255, 0, 0, 0.15),
+               0 0 100px rgba(255, 0, 0, 0.08);
+  filter: blur(2px);
+  z-index: -1;
+  user-select: none;
+  pointer-events: none;
+  animation: aiGlow 6s ease-in-out infinite alternate;
+}
+
+@keyframes aiGlow {
+  from {
+    opacity: 0.05;
+    text-shadow: 0 0 20px rgba(255,0,0,0.08);
+  }
+  to {
+    opacity: 0.12;
+    text-shadow: 0 0 80px rgba(255,0,0,0.15);
+  }
+}
+
+/* ==== Khung đăng ký ==== */
+form {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.95); /* trắng sáng, nhìn đỏ nền mờ nổi */
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255, 0, 0, 0.15); /* đỏ nhạt */
+  width: 350px;
+  backdrop-filter: blur(15px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+}
+
+/* Hiệu ứng hover */
+form:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 35px rgba(255, 0, 0, 0.25);
+}
+
+/* ==== Tiêu đề ==== */
+h2 {
+  text-align: center;
+  color: #c62828; /* đỏ nổi bật */
+  margin-bottom: 25px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* ==== Nhãn và ô nhập ==== */
+label {
+  font-size: 14px;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[name="confirm_password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #f28b8b; /* đỏ nhạt viền */
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  outline: none;
+  margin-bottom: 5px;
+}
+
+/* Hiệu ứng focus */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[name="confirm_password"]:focus {
+  border-color: #e53935; /* đỏ đậm khi focus */
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
+}
+
+/* ==== Nút đăng ký ==== */
+button {
+  width: 100%;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #ffcdd2, #e53935); /* trắng đỏ gradient */
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #ffe5e5, #d32f2f);
+  box-shadow: 0 4px 15px rgba(229, 57, 53, 0.5);
+}
+
+/* ==== Liên kết ==== */
+a {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  text-decoration: none;
+  color: #c62828;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #d32f2f;
+}
+
+/* ==== Hiệu ứng ánh sáng form ==== */
+form::before {
+  content: "";
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  border-radius: 20px;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.6), transparent 70%);
+  z-index: -1;
+}

@@ -1,0 +1,35 @@
+{% extends 'html/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Thi thử - Bộ đề{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/user_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="progress-page">
+  <div class="progress-container">
+    <div class="progress-header">
+      <h1>Bộ đề thi thử</h1>
+      <p>Chọn bộ đề IELTS hoặc TOEIC theo kĩ năng để bắt đầu làm bài.</p>
+    </div>
+
+    <div class="exams-grid">
+      {% for exam in exams %}
+      <div class="course-card">
+        <div>
+          <strong>{{ exam.title }}</strong>
+          <div class="muted">{{ exam.get_exam_type_display }} • {{ exam.get_skill_display }}</div>
+        </div>
+        <div style="margin-left:auto">
+          <a href="{% url 'accounts:take_mock_exam' exam.id %}" class="btn btn-primary">Làm đề</a>
+        </div>
+      </div>
+      {% empty %}
+        <div class="progress-empty">Chưa có bộ đề thử nào.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

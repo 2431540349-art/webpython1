@@ -1,0 +1,13 @@
+#ai-chat-wrapper{position:fixed;right:20px;bottom:20px;z-index:9999;font-family:Arial,Helvetica,sans-serif}
+#ai-chat-toggle{width:56px;height:56px;border-radius:50%;background:#2563eb;color:white;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(37,99,235,0.24);font-size:20px}
+#ai-chat-box{width:320px;height:420px;background:white;border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;margin-top:12px}
+#ai-chat-box.closed{display:none}
+#ai-chat-header{padding:12px 16px;background:linear-gradient(90deg,#2563eb,#1d4ed8);color:white;font-weight:700}
+#ai-chat-messages{flex:1;padding:12px;overflow:auto;background:#f8fafc}
+.ai-msg{margin-bottom:8px;padding:8px 12px;border-radius:8px;max-width:90%}
+.ai-msg.user{background:#2563eb;color:white;margin-left:auto}
+.ai-msg.bot{background:#eef2ff;color:#0f172a}
+#ai-chat-form{display:flex;padding:12px;background:#fff}
+#ai-chat-input{flex:1;padding:8px 10px;border:1px solid #e5e7eb;border-radius:6px;margin-right:8px}
+#ai-chat-form button{background:#2563eb;color:white;border:none;padding:8px 12px;border-radius:6px}
+@media (max-width:500px){#ai-chat-box{width:90vw;height:60vh}}

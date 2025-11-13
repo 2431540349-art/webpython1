@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Learning Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/user_dashboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'accounts/js/navigation.js' %}" defer></script>
+    {% if user.is_authenticated %}
+    <link rel="stylesheet" href="{% static 'accounts/css/ai_chat.css' %}">
+    {% endif %}
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header class="top-nav">
+    <button class="menu-toggle">☰</button>
+    <nav class="nav-links">
+        <a href="{% url 'accounts:my_courses' %}">Khóa học của tôi</a>
+        <a href="{% url 'accounts:user_dashboard' %}" {% block nav_dashboard_active %}{% endblock %}>Tất cả khóa học</a>
+        <a href="{% url 'accounts:skills' %}">Kỹ năng</a>
+
+        <div class="progress-menu">
+            <a href="{% url 'accounts:progress_overview' %}" class="progress-label-link">Tiến độ</a>
+        </div>
+
+        <a href="{% url 'accounts:mock_exams_list' %}">Thi thử</a>
+        <a href="{% url 'accounts:scores_page' %}">Điểm số</a>
+    </nav>
+    <div class="profile">
+        <img src="{% if user.userprofile.avatar %}{{ user.userprofile.avatar.url }}{% else %}https://i.pravatar.cc/40{% endif %}" alt="avatar" class="avatar">
+        <span>{{ request.user.username }}</span>
+        <div class="dropdown" id="profileDropdown">
+            <a href="{% url 'accounts:profile' %}">Hồ sơ</a>
+            <a href="{% url 'accounts:logout' %}">Đăng xuất</a>
+        </div>
+    </div>
+</header>
+
+<aside id="sidebar" class="sidebar">
+    {% block sidebar %}
+    <a href="{% url 'accounts:user_dashboard' %}"></a>
+    {% endblock %}
+</aside>
+
+<main class="content">
+    {% block content %}{% endblock %}
+</main>
+
+<script>
+// Progress helpers (Giữ nguyên)
+function showProgressMenu() {
+    const d = document.getElementById('progressDropdown');
+    if (d) d.style.display = 'block';
+}
+
+function hideProgressMenu() {
+    const d = document.getElementById('progressDropdown');
+    if (d) d.style.display = 'none';
+}
+
+// Lấy CSRF token từ cookies (Giữ nguyên)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% block extra_js %}{% endblock %}
+
+{% if user.is_authenticated %}
+<div id="ai-chat-wrapper">
+    <button id="ai-chat-toggle">🤖</button>
+
+    <div id="ai-chat-box" class="closed">
+        <div id="ai-chat-header">
+            Trợ lý Ngôn ngữ AI
+            <button id="ai-chat-close" style="background:none; border:none; color:white; font-size: 1.5em; cursor: pointer; float: right;">&times;</button>
+        </div>
+
+        <div id="ai-chat-messages">
+            <div class="ai-msg bot">
+                Chào bạn! Tôi là AI Tutor, sẵn sàng giúp bạn phân tích lỗi ngữ pháp và nâng cao từ vựng.
+                Hãy nhập văn bản tiếng Anh vào ô dưới nhé!
+            </div>
+        </div>
+
+        <form id="ai-chat-form">
+            <input type="text" id="ai-chat-input" placeholder="Hỏi tôi về ngữ pháp, từ vựng, bài tập.">
+            <button type="submit" id="ai-chat-send">Gửi</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // CẬP NHẬT ID ELEMENT ĐỂ KHỚP VỚI CSS VÀ LOGIC MỚI
+        const chatToggle = document.getElementById('ai-chat-toggle');
+        const chatBox = document.getElementById('ai-chat-box');
+        const chatClose = document.getElementById('ai-chat-close');
+        const chatForm = document.getElementById('ai-chat-form');
+        const chatInput = document.getElementById('ai-chat-input');
+        const chatMessages = document.getElementById('ai-chat-messages');
+        const csrftoken = getCookie('csrftoken'); // Hàm getCookie đã có sẵn
+
+        // 1. Logic Bật/Tắt Cửa Sổ Chat (Sử dụng class .closed)
+        if (chatToggle && chatBox && chatClose) {
+            chatToggle.addEventListener('click', () => {
+                // Mở chat box bằng cách xóa class 'closed'
+                chatBox.classList.remove('closed');
+                chatToggle.style.display = 'none';
+            });
+
+            chatClose.addEventListener('click', () => {
+                // Đóng chat box bằng cách thêm class 'closed'
+                chatBox.classList.add('closed');
+                chatToggle.style.display = 'block';
+            });
+        }
+
+        // 2. Xử lý Gửi tin nhắn (Sử dụng form submit)
+        if (chatForm) {
+            const sendMessage = (message) => {
+                if (message === "") return;
+
+                // Thêm tin nhắn người dùng (sử dụng class CSS mới: .ai-msg.user)
+                addMessage(message, 'user');
+                chatInput.value = '';
+
+                // Hiển thị thông báo chờ
+                const loadingMessage = addMessage('Đang phân tích...', 'bot', true); // Sử dụng 'bot' cho tin nhắn chờ
+
+                // Gửi AJAX request (sử dụng URL đã sửa trong accounts/urls.py)
+                fetch('/accounts/ai-analyze/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ 'text': message }) // Sử dụng 'text'
+                })
+                .then(response => {
+                    // Xóa thông báo chờ
+                    if (loadingMessage.parentNode) chatMessages.removeChild(loadingMessage);
+
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(`Lỗi Server (${response.status}): ${errorData.error || errorData.message || 'Phản hồi không phải JSON.'}`);
+                        }).catch(e => {
+                            if (response.status === 404) {
+                                throw new Error(`Lỗi Server (404): Vui lòng kiểm tra định tuyến URL.`);
+                            }
+                            if (response.status === 503) {
+                                throw new Error(`Lỗi Server (503): Dịch vụ AI không khả dụng (thiếu API Key).`);
+                            }
+                            throw new Error(`Lỗi kết nối mạng: Vui lòng kiểm tra console.`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Nhận key 'analysis' từ views.py
+                    if (data.analysis) {
+                        addMessage(data.analysis, 'bot');
+                    } else if (data.error || data.message) {
+                        addMessage(`Lỗi từ server: ${data.error || data.message}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    // Xử lý lỗi
+                    if (loadingMessage.parentNode) {
+                         chatMessages.removeChild(loadingMessage);
+                    }
+                    addMessage(`Đã xảy ra lỗi: ${error.message}`, 'error');
+                    console.error('AJAX Error:', error);
+                });
+            };
+
+            // Gắn sự kiện submit cho form
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Ngăn form gửi đi mặc định
+                const message = chatInput.value.trim();
+                sendMessage(message);
+            });
+        }
+
+        function addMessage(text, sender, isLoading = false) {
+            const messageDiv = document.createElement('div');
+            // CẬP NHẬT CLASS ELEMENT ĐỂ KHỚP VỚI CSS MỚI: .ai-msg, .user, .bot, .error
+            messageDiv.classList.add('ai-msg', sender);
+
+            if (isLoading) {
+                // Thêm một lớp CSS cho chấm động nếu có
+                messageDiv.innerHTML = `<span class="loading-dots">...</span> ${text}`;
+            } else {
+                messageDiv.textContent = text;
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+    });
+</script>
+
+{% endif %}
+</body>
+</html>

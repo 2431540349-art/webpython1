@@ -1,0 +1,40 @@
+{% extends 'html/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Điểm số của tôi{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/user_dashboard.css' %}">
+<style>
+  .scores-grid { display:grid; gap:12px }
+  .score-card { display:flex; align-items:center; justify-content:space-between; padding:12px; background:white; border-radius:8px }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="progress-page">
+  <div class="progress-container">
+    <div class="progress-header">
+      <h1>Điểm số của tôi</h1>
+      <p>Danh sách kết quả các bài thi thử bạn đã làm.</p>
+    </div>
+
+    {% if attempts %}
+      <div class="scores-grid">
+        {% for a in attempts %}
+        <div class="score-card">
+          <div>
+            <strong>{{ a.exam.title }}</strong>
+            <div class="muted">{{ a.exam.get_exam_type_display }} • {{ a.exam.get_skill_display }}</div>
+            <div class="muted">{{ a.created_at|date:"d/m/Y H:i" }}</div>
+          </div>
+          <div style="font-weight:800; color:var(--accent-1)">{{ a.score|floatformat:1 }}%</div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="progress-empty">Chưa có điểm số nào.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

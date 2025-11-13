@@ -1,0 +1,85 @@
+{% extends 'html/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'accounts:course_detail' course.id %}">{{ course.title }}</a></li>
+            <li class="breadcrumb-item active">{{ lesson.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">{{ lesson.title }}</h2>
+            <div class="lesson-content">
+                {{ lesson.description|safe }}
+            </div>
+        </div>
+    </div>
+
+    {% if not progress.completed %}
+        <form id="quiz-form" method="POST" action="{% url 'submit_lesson' lesson.id %}">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Câu {{ forloop.counter }}: {{ question.question_text }}</h5>
+                        {% for choice in choices|get_item:question.id %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       id="choice_{{ choice.id }}" 
+                                       value="{{ choice.id }}" required>
+                                <label class="form-check-label" for="choice_{{ choice.id }}">
+                                    {{ choice.choice_text }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Nộp bài</button>
+        </form>
+    {% else %}
+        <div class="alert alert-success">
+            <h4>Kết quả:</h4>
+            <p>Điểm số: {{ progress.score }}%</p>
+            <p>Hoàn thành: {{ progress.completed_at|date:"d/m/Y H:i" }}</p>
+        </div>
+        <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Quay lại khóa học</a>
+    {% endif %}
+</div>
+
+<script>
+document.getElementById('quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultHtml = `
+            <div class="alert alert-success">
+                <h4>Kết quả:</h4>
+                <p>Điểm số: ${data.score}%</p>
+                <p>Trả lời đúng: ${data.correct_answers}/${data.total_questions}</p>
+            </div>
+            <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Quay lại khóa học</a>
+        `;
+        form.innerHTML = resultHtml;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra khi nộp bài. Vui lòng thử lại.');
+    });
+});
+</script>
+{% endblock %}

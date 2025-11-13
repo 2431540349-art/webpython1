@@ -1,0 +1,42 @@
+{% extends 'html/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block nav_dashboard_active %}class="active"{% endblock %}
+
+{% block content %}
+    <div class="courses-list" style="max-width: 900px; margin: 0 auto; padding: 40px 0; display: flex; flex-direction: column; align-items: center;">
+        <h1 style="margin-bottom: 24px; font-size: 2.2rem; font-weight: 700; color: #b3001b; text-align: center;">
+            {% if title %}{{ title }}{% else %}Tất cả khóa học{% endif %}
+        </h1>
+        <p style="margin-bottom: 32px; color: #555; font-size: 1.1rem; text-align: center;">Chúc bạn học tập thật hiệu quả hôm nay, {{ request.user.username }}!</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; width: 100%;">
+        {% for course in courses %}
+        <div class="course-card" style="background: #fff; border-radius: 16px; box-shadow: 0 4px 18px rgba(0,0,0,0.10); padding: 22px; display: flex; flex-direction: column; align-items: center; transition: box-shadow 0.2s;">
+            {% if course.image %}
+                <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 12px; margin-bottom: 16px;">
+            {% else %}
+                <div class="no-image" style="width: 100px; height: 100px; background: #eee; border-radius: 12px; display: flex; justify-content: center; align-items: center; color: #666; font-size: 13px; margin-bottom: 16px;">No image</div>
+            {% endif %}
+            <div class="course-info" style="width: 100%; text-align: center;">
+                <h2 style="font-size: 1.2rem; font-weight: 600; color: #b3001b; margin-bottom: 8px;">{{ course.title }}</h2>
+                <p style="font-size: 1rem; color: #555; margin-bottom: 18px;">{{ course.description }}</p>
+                <div class="course-actions" style="margin-top: 8px;">
+                    <a href="{% url 'accounts:course_detail' course.id %}" class="btn-view-course" style="padding: 10px 24px; border-radius: 8px; background: linear-gradient(90deg,#b3001b,#ff2e43); color: #fff; font-weight: 600; text-decoration: none; font-size: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.10); transition: background 0.2s;">Xem khóa học</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; padding: 20px;">
+            {% if show_all_courses == False %}
+            <p>Bạn chưa đăng ký khóa học nào.</p>
+            <a href="{% url 'accounts:user_dashboard' %}" class="btn-view-course" style="display: inline-block; margin-top: 15px; padding: 10px 24px; border-radius: 8px; background: linear-gradient(90deg,#b3001b,#ff2e43); color: #fff; font-weight: 600; text-decoration: none; font-size: 1rem;">Xem tất cả khóa học</a>
+            {% else %}
+            <p>Không có khóa học nào.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

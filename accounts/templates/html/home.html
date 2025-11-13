@@ -1,0 +1,64 @@
+{% extends 'html/base.html' %}
+{% load static %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-4 mb-4">Chào mừng đến với chúng tôi</h1>
+            <p class="lead mb-4">Học tập, phát triển và hoàn thiện bản thân cùng với các khóa học chất lượng.</p>
+            <div class="d-flex gap-3">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:user_dashboard' %}" class="btn btn-primary btn-lg">Khóa học của tôi</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg">Đăng nhập</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary btn-lg">Đăng ký</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'accounts/images/hero-image.jpg' %}" alt="Learning" class="img-fluid rounded shadow-lg" 
+                 onerror="this.src='{% static 'accounts/images/default-hero.jpg' %}'; this.onerror=null;">
+        </div>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h2 class="mb-4">Bắt đầu hành trình học tập của bạn</h2>
+            <p class="lead mb-4">Tham gia cùng hàng nghìn học viên đang phát triển mỗi ngày</p>
+            <a href="{% url 'accounts:register' %}" class="btn btn-success btn-lg">Đăng ký ngay</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Học mọi lúc mọi nơi</h3>
+                    <p class="card-text">Truy cập các khóa học từ máy tính, điện thoại hoặc máy tính bảng của bạn.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Chứng chỉ công nhận</h3>
+                    <p class="card-text">Nhận chứng chỉ sau khi hoàn thành khóa học để ghi nhận thành tích của bạn.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Hỗ trợ 24/7</h3>
+                    <p class="card-text">Đội ngũ hỗ trợ luôn sẵn sàng giúp đỡ bạn trong quá trình học tập.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

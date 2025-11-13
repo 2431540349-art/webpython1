@@ -1,0 +1,288 @@
+/* ==== Tổng thể ==== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+  color: #222;
+  scroll-behavior: smooth;
+}
+
+/* Header cố định với trống đồng */
+header {
+  background: linear-gradient(90deg, #d50000, #b71c1c);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  position: fixed;   /* cố định */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+  overflow: hidden;  /* để cắt tràn hình trống đồng */
+}
+
+/* Trống đồng chỉ hiển thị trong header */
+header::before {
+  content: '';
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1250px;       /* phóng to */
+  height: 1250px;
+  background: url('../png/picture1.png') no-repeat center;
+  background-size: cover;  /* fill nhưng vẫn cắt phần dư */
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-img {
+  width: 100%;       /* chiếm hết khung chứa */
+  max-width: 200px;  /* không vượt quá 400px */
+  height: auto;      /* giữ tỉ lệ */
+  border-radius: 15px; /* nếu muốn bo góc */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* thêm bóng */
+}
+
+/* Logo và cờ trên header */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+.logo .flag-logo {
+  width: 40px;
+  height: 26px;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(255,255,255,0.8);
+}
+
+/* Nút chọn ngôn ngữ */
+.language-switch .flag {
+  width: 32px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid #fff;
+}
+.language-switch .flag.active {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px #ffe600;
+}
+/* CTA Nút ánh sáng 10 phương */
+.cta {
+  margin-top: 30px;
+  background: #ffe600;
+  color: #000;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+  z-index: 1;
+  overflow: visible;
+}
+.cta-glow {
+  box-shadow:
+    0 0 5px #fff200,
+    0 0 10px #ffe600,
+    0 0 15px #ffd500,
+    0 0 20px #ffc107,
+    0 0 25px #ffb300,
+    0 0 30px #ffa000,
+    0 0 35px #ff8f00,
+    0 0 40px #ff6f00,
+    0 0 45px #ff5722,
+    0 0 50px #ff3d00;
+  animation: glowPulse 1s infinite alternate;
+}
+@keyframes glowPulse {
+  0% { box-shadow:
+    0 0 3px #fff200,
+    0 0 7px #ffe600,
+    0 0 10px #ffd500,
+    0 0 15px #ffc107,
+    0 0 18px #ffb300,
+    0 0 20px #ffa000,
+    0 0 25px #ff8f00,
+    0 0 30px #ff6f00,
+    0 0 35px #ff5722,
+    0 0 40px #ff3d00;
+  }
+  100% { box-shadow:
+    0 0 6px #fff200,
+    0 0 12px #ffe600,
+    0 0 18px #ffd500,
+    0 0 24px #ffc107,
+    0 0 30px #ffb300,
+    0 0 36px #ffa000,
+    0 0 42px #ff8f00,
+    0 0 48px #ff6f00,
+    0 0 54px #ff5722,
+    0 0 60px #ff3d00;
+  }
+}
+
+nav { position: relative; z-index: 1; }
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.3s, transform 0.3s;
+}
+nav a:hover { opacity: 0.9; transform: translateY(-2px); }
+
+.lang-login {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==== Nút chọn ngôn ngữ kiểu công tắc ==== */
+.language-switch {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.15);
+  padding: 5px 10px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.language-switch:hover { background: rgba(255,255,255,0.25); }
+.language-switch .flag {
+  width: 32px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid #fff;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.language-switch .flag.active {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px #ffe600;
+}
+
+/* ==== Nút Đăng nhập / Đăng ký ==== */
+.login-btn, .signup-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.login-btn { background: white; color: #d50000; }
+.signup-btn { background: #ffe600; color: #000; }
+.login-btn:hover, .signup-btn:hover { transform: translateY(-3px); }
+
+/* ==== Hero ==== */
+.hero {
+  background: linear-gradient(135deg, #b71c1c, #ff1744);
+  color: white;
+  text-align: center;
+  padding: 140px 30px 100px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 200; /* nổi bật */
+  font-size:  clamp(36px, 5vw, 60px);
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+.hero h1 span { color: #ffe600; }
+.hero p { max-width: 700px; margin: auto; font-size: 18px; }
+.cta {
+  margin-top: 30px;
+  background: #ffe600;
+  color: #000;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: all 0.3s;
+}
+.cta:hover { background: white; transform: translateY(-5px); }
+
+/* ==== About ==== */
+.about { padding: 80px 60px; background: #fff; }
+.about h2 { text-align: center; font-size: 36px; margin-bottom: 50px; color: #b71c1c; }
+.about h2 span { color: #ff1744; }
+.about-grid { display: flex; align-items: center; gap: 40px; }
+.about-text { flex: 1; font-size: 18px; }
+.about img {
+  flex: 1;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* ==== Methods ==== */
+.methods { background: #fff5f5; padding: 80px 60px; text-align: center; }
+.methods h2 { font-size: 36px; margin-bottom: 50px; color: #b71c1c; }
+.method-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); }
+.card i { font-size: 40px; color: #d50000; margin-bottom: 20px; }
+
+/* ==== Reviews ==== */
+.reviews { padding: 80px 60px; text-align: center; background: #fff; }
+.reviews h2 { font-size: 36px; color: #b71c1c; margin-bottom: 40px; }
+.review-slider { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+.review {
+  background: #fff5f5;
+  padding: 30px;
+  border-radius: 15px;
+  font-style: italic;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* ==== Contact ==== */
+.contact {
+  background: linear-gradient(120deg, #b71c1c, #d50000);
+  color: white;
+  text-align: center;
+  padding: 80px 60px;
+}
+.contact h2 { font-size: 36px; margin-bottom: 20px; }
+.contact form { max-width: 600px; margin: 30px auto; display: flex; flex-direction: column; gap: 15px; }
+.contact input, .contact textarea {
+  padding: 12px 15px;
+  border: none;
+  border-radius: 10px;
+}
+.contact button {
+  background: #ffe600;
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ==== Footer ==== */
+footer {
+  background: #b71c1c;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  font-weight: 500;
+}

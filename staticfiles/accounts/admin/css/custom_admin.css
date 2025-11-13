@@ -1,0 +1,137 @@
+/* Custom styling for the admin interface */
+:root {
+  --primary: #1a73e8;
+  --secondary: #4285f4;
+  --accent: #fbbc04;
+  --link-fg: #1967d2;
+  --header-bg: #1a73e8;
+  --header-color: #fff;
+}
+
+/* Header styling */
+#header {
+  background: var(--header-bg);
+  color: var(--header-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#header a:link, #header a:visited {
+  color: var(--header-color);
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  background: #f8f9fa;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 0.9rem;
+}
+
+/* Module styling */
+.module h2, .module caption {
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 15px;
+}
+
+/* List view enhancements */
+#changelist table {
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#changelist table thead th {
+  background: #f8f9fa;
+  padding: 12px 8px;
+}
+
+#changelist .row1 {
+  background: #ffffff;
+}
+
+#changelist .row2 {
+  background: #f8f9fa;
+}
+
+/* Badge styling */
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.85em;
+  display: inline-block;
+}
+
+/* Form styling */
+.form-row {
+  padding: 12px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.aligned label {
+  color: #202124;
+  font-weight: 500;
+}
+
+/* Button styling */
+.button, input[type=submit], input[type=button], .submit-row input {
+  background: var(--primary);
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover {
+  background: var(--secondary);
+}
+
+.button.default {
+  background: var(--accent);
+}
+
+/* Messages */
+.success {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+/* Media previews */
+.field-media_preview img {
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+  max-width: 300px;
+  height: auto;
+}
+
+.field-media_preview audio {
+  width: 300px;
+  margin: 10px 0;
+}
+
+/* Dashboard improvements */
+.dashboard .module table td a {
+  padding: 10px 8px;
+  display: block;
+  color: var(--link-fg);
+}
+
+/* Responsive improvements */
+@media (max-width: 767px) {
+  #header {
+    padding: 10px 15px;
+  }
+  
+  .form-row {
+    padding: 8px 0;
+  }
+  
+  .aligned label {
+    width: 100%;
+    padding: 8px 0;
+  }
+}

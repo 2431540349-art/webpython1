@@ -1,0 +1,128 @@
+/* ==== Body và nền ==== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ffeaea, #f5c0c0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* ==== Container ==== */
+.auth-container {
+  width: 100%;
+  max-width: 380px;
+  padding: 0 1rem;
+  z-index: 1;
+}
+
+.auth-box {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-box:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+}
+
+/* ==== Header ==== */
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-header h2 {
+  color: #b71c1c;
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.auth-subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+/* ==== Form ==== */
+.auth-form label {
+  font-size: 14px;
+  color: #555;
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 5px;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+  border-color: #b71c1c;
+  box-shadow: 0 0 8px rgba(183,28,28,0.3);
+}
+
+/* ==== Google login ==== */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 10px;
+  background: white;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  margin: 15px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.btn-google img {
+  width: 22px;
+  height: 22px;
+}
+
+.btn-google:hover {
+  border-color: #b71c1c;
+  background: #fafafa;
+  transform: translateY(-1px);
+}
+
+/* ==== Submit button ==== */
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #ffeaea, #f5c0c0);
+  border: 2px solid #b71c1c;
+  border-radius: 10px;
+  color: #b71c1c;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: linear-gradient(135deg, #f5c0c0, #ffeaea);
+  color: white;
+  box-shadow: 0 4px 15px rgba(183,28,28,0.4);
+}
+
+/* ==== Responsive ==== */
+@media (max-width: 420px) {
+  .auth-box {
+    padding: 30px 20px;
+  }
+}

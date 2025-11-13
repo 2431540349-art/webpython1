@@ -1,0 +1,38 @@
+{% extends 'html/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Kỹ năng & Chứng chỉ{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/user_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="skills-page">
+  <div class="progress-container">
+    <div class="progress-header">
+      <h1>Chứng chỉ đã hoàn thành</h1>
+      <p>Danh sách các khóa học bạn đã hoàn thành. Bạn có thể xem hoặc in chứng chỉ.</p>
+    </div>
+
+    {% if certificates %}
+    <div class="certificates-grid">
+      {% for c in certificates %}
+      <div class="certificate-card">
+        <div class="certificate-info">
+          <h3>{{ c.title }}</h3>
+          <div class="muted">Hoàn thành: {{ c.completed_at|date:"d/m/Y H:i" }}</div>
+        </div>
+        <div class="certificate-actions">
+          <a href="{{ c.url }}" class="btn btn-primary">Xem chứng chỉ</a>
+          <a href="{{ c.url }}?print=1" target="_blank" class="btn btn-secondary">In / Tải về</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <div class="progress-empty">Bạn chưa hoàn thành khóa học nào để nhận chứng chỉ.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

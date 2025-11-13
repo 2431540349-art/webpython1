@@ -1,0 +1,36 @@
+<h2>Trang quản trị</h2>
+<p>Chào {{ user.get_full_name|default:user.username }}</p>
+<a href="{% url 'accounts:logout' %}">Đăng xuất</a>
+
+<!-- Admin action: trigger study reminder emails -->
+<div style="margin-top:1rem">
+	<form id="reminder-form" method="post" action="{% url 'accounts:trigger_send_reminders' %}">
+		{% csrf_token %}
+		<button type="submit" id="reminder-btn">Gửi nhắc học ngay</button>
+	</form>
+	<div id="reminder-result" style="margin-top:.5rem;color:#333"></div>
+</div>
+
+<script>
+document.getElementById('reminder-form').addEventListener('submit', async function(e){
+	e.preventDefault();
+	const btn = document.getElementById('reminder-btn');
+	btn.disabled = true;
+	btn.textContent = 'Đang gửi...';
+	const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+	try{
+		const res = await fetch(this.action, {
+			method: 'POST',
+			headers: {'X-CSRFToken': csrftoken, 'Accept': 'application/json'},
+			credentials: 'same-origin'
+		});
+		const j = await res.json();
+		document.getElementById('reminder-result').textContent = JSON.stringify(j);
+	}catch(err){
+		document.getElementById('reminder-result').textContent = 'Lỗi: ' + err.message;
+	}finally{
+		btn.disabled = false;
+		btn.textContent = 'Gửi nhắc học ngay';
+	}
+});
+</script>
